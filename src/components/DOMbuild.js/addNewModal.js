@@ -1,21 +1,8 @@
 // create a bootstrap modal that will be used to add new projects needs the title and description of the project
-//<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-/* <div class="modal-dialog">
-<div class="modal-content">
-  <div class="modal-header">
-    <h1 class="modal-title fs-5" id="exampleModalLabel">Modal title</h1>
-    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-  </div>
-  <div class="modal-body">
-    ...
-  </div>
-  <div class="modal-footer">
-    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-    <button type="button" class="btn btn-primary">Save changes</button>
-  </div>
-</div>
-</div>
-</div> */
+
+import { createProjects } from '../logic/createProjects';
+import * as bootstrap from 'bootstrap';
+import { showProjects } from './showProjects';
 
 export function createProjectModal() {
     const modalHTML = `
@@ -27,16 +14,43 @@ export function createProjectModal() {
             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
           </div>
           <div class="modal-body">
-            Content for new project...
-          </div>
-          <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-            <button type="button" class="btn btn-primary">Save changes</button>
+            <!-- Form to add new project -->
+            <form id="newProjectForm">
+              <div class="mb-3">
+                <label for="project-title" class="form-label">Project Title</label>
+                <input type="text" class="form-control" id="project-title" required>
+              </div>
+              <div class="mb-3">
+                <label for="project-desc" class="form-label">Project Description</label>
+                <textarea class="form-control" id="project-desc" required></textarea>
+              </div>
+              <button type="button" class="btn btn-primary" id="createProjectButton">Create Project</button>
+            </form>
           </div>
         </div>
       </div>
     </div>
-        `;
+    `;
+
+    document.body.insertAdjacentHTML('beforeend', modalHTML);
     
-        document.body.insertAdjacentHTML('beforeend', modalHTML);
+    // Event listener to handle form submission
+    document.getElementById('createProjectButton').addEventListener('click', (event) => {
+        // Prevent the default form submission
+        event.preventDefault();
+
+        // Extract form data
+        const title = document.getElementById('project-title').value;
+        const description = document.getElementById('project-desc').value;
+        
+        // Call createProjects with the form data
+        createProjects(title, description);
+        
+
+        // Optionally, close the modal after creation
+        const modalInstance = bootstrap.Modal.getInstance(document.getElementById('exampleModal'));
+        if (modalInstance) {
+            modalInstance.hide();
+        }
+    });
 }

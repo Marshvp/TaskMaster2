@@ -1,14 +1,10 @@
 import { Projects } from "../classes/projects";
 import { createProjectModal } from "./addNewModal"
+import { projectManager} from "../classes/projectManager";
 
-const projectList = [
-    new Projects('Project 1', 'Description of Project 1'),
-    new Projects('Project 2', 'Description of Project 2'),
-    new Projects('Project 3', 'Description of Project 3'),
-    new Projects('Project 4', 'Description of Project 4'),
-    new Projects('Project 5', 'Description of Project 5'),
-    // Add more projects as needed
-];
+
+const projectList = projectManager.getProjects()
+
 let contentContainer
 let projectsContainer
 createProjectModal();
@@ -30,7 +26,7 @@ function createProjectsContainer() {
 export function showProjects() {
     contentContainer = document.getElementById('content-container') || createContentContainer();
     contentContainer.innerHTML = '';
-    projectsContainer = createProjectsContainer();
+    projectsContainer = document.getElementById('projects-container') || createProjectsContainer();
 
     // create new projects button
     const newProjectButton = document.createElement('button');
