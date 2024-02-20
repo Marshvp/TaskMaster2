@@ -1,3 +1,5 @@
+import { showProjects } from "./showProjects";
+
 export function buildNav() {
     // Create nav element
     const nav = document.createElement('nav');
@@ -11,8 +13,11 @@ export function buildNav() {
     // Create navbar-brand
     const brand = document.createElement('a');
     brand.classList.add('navbar-brand');
-    brand.href = '#';
     brand.textContent = 'TaskMaster';
+    brand.addEventListener('click', (e) => {
+        e.preventDefault();
+        console.log('Brand Clicked');
+    })
     containerFluid.appendChild(brand);
 
     // Create navbar-toggler button
@@ -42,8 +47,9 @@ export function buildNav() {
 
     // Create nav items
     const navItems = [
-        { text: 'Home', href: '#', active: true },
-        { text: 'Projects', href: '#' }
+        { text: 'Home', clickHandler:() => console.log('Home Clicked')},
+        { text: 'Projects', clickHandler: showProjects}
+        
     ];
 
     navItems.forEach(item => {
@@ -51,11 +57,11 @@ export function buildNav() {
         li.classList.add('nav-item');
         const a = document.createElement('a');
         a.classList.add('nav-link');
-        if (item.active) {
-            a.classList.add('active');
-            a.setAttribute('aria-current', 'page');
-        }
-        a.href = item.href;
+        a.addEventListener('click', (e) => {
+            e.preventDefault();
+            item.clickHandler();
+        });
+       
         a.textContent = item.text;
         li.appendChild(a);
         navUl.appendChild(li);
