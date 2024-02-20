@@ -1,14 +1,17 @@
 import { Projects } from "../classes/projects";
-
+import { createProjectModal } from "./addNewModal"
 
 const projectList = [
     new Projects('Project 1', 'Description of Project 1'),
     new Projects('Project 2', 'Description of Project 2'),
     new Projects('Project 3', 'Description of Project 3'),
+    new Projects('Project 4', 'Description of Project 4'),
+    new Projects('Project 5', 'Description of Project 5'),
     // Add more projects as needed
 ];
 let contentContainer
 let projectsContainer
+createProjectModal();
 
 function createContentContainer() {
     const container = document.createElement('div');
@@ -28,6 +31,16 @@ export function showProjects() {
     contentContainer = document.getElementById('content-container') || createContentContainer();
     contentContainer.innerHTML = '';
     projectsContainer = createProjectsContainer();
+
+    // create new projects button
+    const newProjectButton = document.createElement('button');
+    newProjectButton.textContent = 'Add a New Project';
+    newProjectButton.classList.add('btn', 'btn-primary', 'w-100', 'mb-3');
+    newProjectButton.setAttribute('data-bs-toggle', 'modal');
+    newProjectButton.setAttribute('data-bs-target', '#exampleModal');
+
+    projectsContainer.appendChild(newProjectButton);
+
 
     // Create a row to contain the projects
     const row = document.createElement('div');
