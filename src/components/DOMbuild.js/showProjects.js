@@ -1,6 +1,7 @@
-import { Projects } from "../classes/projects";
-import { createProjectModal } from "./addNewModal"
+
+import { createProjectModal } from "./addNewProModal"
 import { projectManager} from "../classes/projectManager";
+import { showTasks } from "./showTasks";
 
 
 const projectList = projectManager.getProjects()
@@ -92,7 +93,9 @@ function displayProjectDetails(project) {
 
     const titleElement = document.createElement('h2');
     titleElement.textContent = project.title;
+    titleElement.id = `project-title-${project.id}`
     detailsContainer.appendChild(titleElement);
+    detailsContainer.appendChild(showTasks(project));
 
     // Add more project information here
 }

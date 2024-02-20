@@ -1,8 +1,22 @@
+import { Projects } from './projects';
+import { Task } from './tasks';
 export class ProjectManager {
     constructor() {
-        // Load existing projects from localStorage or initialize an empty array if none exist
         const savedProjects = localStorage.getItem('projects');
-        this.projectList = savedProjects ? JSON.parse(savedProjects) : [];
+        if (savedProjects) {
+            const projectsArray = JSON.parse(savedProjects);
+            this.projectList = projectsArray.map(proj => {
+                let project = new Projects(proj.title, proj.desc);
+                project.id = proj.id;
+                project.isCompleted = proj.isCompleted;
+                project.tasks = proj.tasks.map(task => 
+                    new Task(task.title, task.desc, task.dueDate, task.priority)
+                ); // Re-instantiate each task as an instance of Task
+                return project;
+            });
+        } else {
+            this.projectList = [];
+        }
     }
     
 
@@ -28,6 +42,7 @@ export class ProjectManager {
         localStorage.setItem('projects', JSON.stringify(this.projectList));
         console.log('Projects saved');
     }
+
 }
 
 export const projectManager = new ProjectManager(); // Create a single instance of the ProjectManager class to be used throughout the app   
