@@ -3,6 +3,7 @@ import  * as bootstrap from 'bootstrap';
 import { addNewTaskModal } from './addNewTaskModal';
 import { editTaskModal } from './editTaskModal';
 import { updateEditModal } from './editTaskModal';
+import { displayProjectDetails } from './showProjects';
 //tasks are stored as an array in the project object. this function will display the tasks for a given project.
 //if there are no tasks, it will display a h3 element with the text "No tasks to display"
 //the project parameter is a project object. to access the tasks
@@ -135,6 +136,19 @@ export function showTasks(project) {
                 markCompleteButton.classList.add('btn', 'btn-success', 'mt-3');
                 markCompleteButton.id = `mark-complete-${index}`;
                 markCompleteButton.textContent = 'Mark Complete';
+
+                //add event listener to mark complete button
+                markCompleteButton.addEventListener('click', () => {
+                    console.log(`Mark complete button clicked for task ${index}`);
+                    //toggle checked property
+                    task.checked = !task.checked;
+                    //update project in local storage
+                    const project = projectManager.getProjects().find(p => p.id === projectID);
+                    projectManager.saveProjects();
+                    //update the display
+                    displayProjectDetails(project);
+                });
+
                 markCompleteDeleteP.appendChild(markCompleteButton);
             } else {
                 //show text saying task is complete
@@ -158,6 +172,8 @@ export function showTasks(project) {
                 
                 editmodalInstance.show();
             });
+
+            
 
 
         })
