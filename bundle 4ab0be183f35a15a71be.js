@@ -19964,59 +19964,418 @@ module.exports = styleTagTransform;
 
 /***/ }),
 
-/***/ "./src/components/DOMbuild.js/addNewModal.js":
-/*!***************************************************!*\
-  !*** ./src/components/DOMbuild.js/addNewModal.js ***!
-  \***************************************************/
+/***/ "./src/components/DOMbuild.js/addNewProModal.js":
+/*!******************************************************!*\
+  !*** ./src/components/DOMbuild.js/addNewProModal.js ***!
+  \******************************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   createProjectModal: () => (/* binding */ createProjectModal)
 /* harmony export */ });
-Object(function webpackMissingModule() { var e = new Error("Cannot find module './createProjects'"); e.code = 'MODULE_NOT_FOUND'; throw e; }());
+/* harmony import */ var _logic_createProjects__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../logic/createProjects */ "./src/components/logic/createProjects.js");
+/* harmony import */ var bootstrap__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! bootstrap */ "./node_modules/bootstrap/dist/js/bootstrap.esm.js");
+/* harmony import */ var _showProjects__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./showProjects */ "./src/components/DOMbuild.js/showProjects.js");
 // create a bootstrap modal that will be used to add new projects needs the title and description of the project
+
+
+
+
 
 
 function createProjectModal() {
     const modalHTML = `
-    <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal fade" id="newProModal" tabindex="-1" aria-labelledby="newProeModalLabel" aria-hidden="true">
       <div class="modal-dialog">
         <div class="modal-content">
           <div class="modal-header">
-            <h5 class="modal-title" id="exampleModalLabel">New Project</h5>
+            <h5 class="modal-title" id="newProModalLabel">New Project</h5>
             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
           </div>
           <div class="modal-body">
             <!-- Form to add new project -->
-            <form>
+            <form id="newProjectForm">
               <div class="mb-3">
                 <label for="project-title" class="form-label">Project Title</label>
-                <input type="text" class="form-control" id="project-title" aria-describedby="project-title-help">
+                <input type="text" class="form-control" id="project-title" required>
               </div>
               <div class="mb-3">
                 <label for="project-desc" class="form-label">Project Description</label>
-                <textarea class="form-control" id="project-desc" aria-describedby="project-desc-help"></textarea>
+                <textarea class="form-control" id="project-desc" required></textarea>
               </div>
-              <!-- submit button needs to trigger the createProjects function -->
-
-              <button type="submit" class="btn btn-primary" id="createProjectButton">Create Project</button>
+              <button type="button" class="btn btn-primary" id="createProjectButton">Create Project</button>
             </form>
           </div>
-          
         </div>
       </div>
     </div>
-        `;
+    `;
+
+    document.body.insertAdjacentHTML('beforeend', modalHTML);
+    
+    // Event listener to handle form submission
+    document.getElementById('createProjectButton').addEventListener('click', (event) => {
+        // Prevent the default form submission
+        event.preventDefault();
+
+        // Extract form data
+        const title = document.getElementById('project-title').value;
+        const description = document.getElementById('project-desc').value;
         
-        document.body.insertAdjacentHTML('beforeend', modalHTML);
-        const createProjectButton = document.getElementById('createProjectButton');
-        if (createProjectButton) {
-          // Add the event listener to the button
-          createProjectButton.addEventListener('click', Object(function webpackMissingModule() { var e = new Error("Cannot find module './createProjects'"); e.code = 'MODULE_NOT_FOUND'; throw e; }()));
-        } else {
-            console.error('Could not find the create project button in the DOM');
+        // Call createProjects with the form data
+        (0,_logic_createProjects__WEBPACK_IMPORTED_MODULE_0__.createProjects)(title, description);
+        
+        // Clear the form
+        document.getElementById('project-title').value = '';
+        document.getElementById('project-desc').value = '';
+
+        
+        // Optionally, close the modal after creation
+        const modalInstance = bootstrap__WEBPACK_IMPORTED_MODULE_1__.Modal.getInstance(document.getElementById('newProModal'));
+        if (modalInstance) {
+            modalInstance.hide();
         }
+    });
+
+}
+
+
+/***/ }),
+
+/***/ "./src/components/DOMbuild.js/addNewTaskModal.js":
+/*!*******************************************************!*\
+  !*** ./src/components/DOMbuild.js/addNewTaskModal.js ***!
+  \*******************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   addNewTaskModal: () => (/* binding */ addNewTaskModal)
+/* harmony export */ });
+/* harmony import */ var bootstrap__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! bootstrap */ "./node_modules/bootstrap/dist/js/bootstrap.esm.js");
+/* harmony import */ var _logic_createTasks__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../logic/createTasks */ "./src/components/logic/createTasks.js");
+/* harmony import */ var _showProjects__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./showProjects */ "./src/components/DOMbuild.js/showProjects.js");
+/* harmony import */ var _classes_projectManager__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../classes/projectManager */ "./src/components/classes/projectManager.js");
+
+
+
+
+
+function addNewTaskModal() {
+    const modalHTML = `
+    <div class="modal fade" id="taskModal" tabindex="-1" aria-labelledby="taskModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="taskModalLabel">New Task</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form id="newTaskForm">
+                    <div class="mb-3">
+                        <label for="task-title" class="form-label">Task Title</label>
+                        <input type="text" class="form-control" id="task-title" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="task-desc" class="form-label">Task Description</label>
+                        <textarea class="form-control" id="task-desc" required></textarea>
+                    </div>
+                    <div class="mb-3">
+                        <label for="task-due-date" class="form-label">Due Date</label>
+                        <input type="date" class="form-control" id="task-due-date" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="task-priority" class="form-label">Priority</label>
+                        <select class="form-select" id="task-priority" required>
+                            <option value="low">Low</option>
+                            <option value="medium">Medium</option>
+                            <option value="high">High</option>
+                        </select>
+                    </div>
+                    <input type="hidden" id="project-id">
+                    <button type="button" class="btn btn-primary" id="createTaskButton">Create Task</button>
+                </form>
+            </div>
+        </div>
+    </div>
+    `;
+
+
+    document.body.insertAdjacentHTML('beforeend', modalHTML);
+
+    // Event listener to handle form submission for new task add logic will be added in ../logic/createTask.js
+    document.getElementById('createTaskButton').addEventListener('click', (event) => {
+        // Prevent the default form submission
+        event.preventDefault();
+
+
+        // Extract form data
+        const title = document.getElementById('task-title').value;
+        const description = document.getElementById('task-desc').value;
+        const dueDate = document.getElementById('task-due-date').value;
+        const priority = document.getElementById('task-priority').value;
+        const projectId = document.getElementById('project-id').value;
+        console.log(projectId);
+        // Call createTask with the form data
+        (0,_logic_createTasks__WEBPACK_IMPORTED_MODULE_1__.createTasks)(title, description, dueDate, priority, projectId);
+        // get project from project manager
+        const project = _classes_projectManager__WEBPACK_IMPORTED_MODULE_3__.projectManager.projectList.find(project => project.id === projectId);
+        (0,_showProjects__WEBPACK_IMPORTED_MODULE_2__.displayProjectDetails)(project);
+
+        // Optionally, close the modal after creation
+        const modalInstance = bootstrap__WEBPACK_IMPORTED_MODULE_0__.Modal.getInstance(document.getElementById('taskModal'));
+        if (modalInstance) {
+            modalInstance.hide();
+        }
+    });
+    
+
+}
+
+/***/ }),
+
+/***/ "./src/components/DOMbuild.js/buildContentCon.js":
+/*!*******************************************************!*\
+  !*** ./src/components/DOMbuild.js/buildContentCon.js ***!
+  \*******************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   createContentContainer: () => (/* binding */ createContentContainer)
+/* harmony export */ });
+function createContentContainer() {
+    const container = document.createElement('div');
+    container.id = 'content-container';
+    document.body.appendChild(container);
+    return container;
+}
+
+
+
+/***/ }),
+
+/***/ "./src/components/DOMbuild.js/editTaskModal.js":
+/*!*****************************************************!*\
+  !*** ./src/components/DOMbuild.js/editTaskModal.js ***!
+  \*****************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   editTaskModal: () => (/* binding */ editTaskModal),
+/* harmony export */   updateEditModal: () => (/* binding */ updateEditModal)
+/* harmony export */ });
+/* harmony import */ var _logic_editTask__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../logic/editTask */ "./src/components/logic/editTask.js");
+/* harmony import */ var bootstrap__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! bootstrap */ "./node_modules/bootstrap/dist/js/bootstrap.esm.js");
+/* harmony import */ var _showTasks__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./showTasks */ "./src/components/DOMbuild.js/showTasks.js");
+/* harmony import */ var _classes_projectManager__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../classes/projectManager */ "./src/components/classes/projectManager.js");
+/* harmony import */ var _showProjects__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./showProjects */ "./src/components/DOMbuild.js/showProjects.js");
+
+
+
+
+
+
+function editTaskModal (task, index) {
+    
+    //create base modal template
+    const modal = document.createElement('div');
+    modal.classList.add('modal', 'fade');
+    modal.id = 'editTaskModal';
+    modal.setAttribute('tabindex', '-1');
+    modal.setAttribute('aria-labelledby', 'editTaskModalLabel');
+    modal.setAttribute('aria-hidden', 'true');
+    document.body.appendChild(modal);
+
+    //create modal dialog
+    const modalDialog = document.createElement('div');
+    modalDialog.classList.add('modal-dialog');
+    modal.appendChild(modalDialog);
+
+    //create modal content
+    const modalContent = document.createElement('div');
+    modalContent.classList.add('modal-content');
+    modalDialog.appendChild(modalContent);
+
+    //create modal header
+    const modalHeader = document.createElement('div');
+    modalHeader.classList.add('modal-header');
+    modalContent.appendChild(modalHeader);
+
+    //create modal title
+    const modalTitle = document.createElement('h5');
+    modalTitle.classList.add('modal-title');
+    modalTitle.id = 'editTaskModalLabel';
+    modalTitle.textContent = 'Edit Task';
+    modalHeader.appendChild(modalTitle);
+
+    //create close button
+    const closeButton = document.createElement('button');
+    closeButton.classList.add('btn-close');
+    closeButton.setAttribute('type', 'button');
+    closeButton.setAttribute('data-bs-dismiss', 'modal');
+    closeButton.setAttribute('aria-label', 'Close');
+    modalHeader.appendChild(closeButton);
+
+    //create modal body
+    const modalBody = document.createElement('div');
+    modalBody.classList.add('modal-body', 'editmodal-body');
+    modalContent.appendChild(modalBody);
+
+}
+
+function updateEditModal(task, index, projectID) {
+
+    //append relavent data to modal before showing
+
+    // find moadal body
+    const modalBody = document.getElementById('editTaskModal').querySelector('.editmodal-body');
+
+    if (modalBody) {
+        //clear modal body
+        modalBody.innerHTML = '';
+        console.log('modal body cleared');
+    }
+
+
+
+    //create form
+    const form = document.createElement('form');
+    form.id = 'editTaskForm';
+    modalBody.appendChild(form);
+
+    //task titleDiv
+    const titleDiv = createDivmb3();
+    form.appendChild(titleDiv);
+
+    //task descDiv
+    const descDiv = createDivmb3();
+    form.appendChild(descDiv);
+
+    //task due dateDiv
+    const dueDateDiv = createDivmb3();
+    form.appendChild(dueDateDiv);
+
+    //task priorityDiv
+    const priorityDiv = createDivmb3();
+    form.appendChild(priorityDiv);
+
+    
+    //task title label
+    const titleLabel = document.createElement('label');
+    titleLabel.classList.add('form-label');
+    titleLabel.setAttribute('for', 'task-title');
+    titleLabel.textContent = `Editing title For: "${task.title}"`;
+    titleDiv.appendChild(titleLabel);
+
+    //task title input
+    const titleInput = document.createElement('input');
+    titleInput.classList.add('form-control');
+    titleInput.setAttribute('type', 'text');
+    titleInput.setAttribute('id', 'task-title');
+    titleInput.setAttribute('required', '');
+    titleInput.value = `${task.title}`;
+    titleInput.setAttribute('placeholder', `${task.title}`);
+    titleDiv.appendChild(titleInput);
+
+    //task desc label
+    const descLabel = document.createElement('label');
+    descLabel.classList.add('form-label');
+    descLabel.setAttribute('for', 'task-desc');
+    descLabel.textContent = `Editing description`;
+    descDiv.appendChild(descLabel);
+
+    //task desc input
+    const descInput = document.createElement('textarea');
+    descInput.classList.add('form-control');
+    descInput.setAttribute('id', 'task-desc');
+    descInput.setAttribute('required', '');
+    descInput.textContent = `${task.desc}`;
+    descDiv.appendChild(descInput);
+
+    //task due date label
+    const dueDateLabel = document.createElement('label');
+    dueDateLabel.classList.add('form-label');
+    dueDateLabel.setAttribute('for', 'task-due-date');
+    dueDateLabel.textContent = `Editing due date`;
+    dueDateDiv.appendChild(dueDateLabel);
+
+    //task due date input
+    const dueDateInput = document.createElement('input');
+    dueDateInput.classList.add('form-control');
+    dueDateInput.setAttribute('type', 'date');
+    dueDateInput.setAttribute('id', 'task-due-date');
+    dueDateInput.setAttribute('required', '');
+    dueDateInput.value = `${task.dueDate}`;
+    dueDateDiv.appendChild(dueDateInput);
+
+    //task priority label
+    const priorityLabel = document.createElement('label');
+    priorityLabel.classList.add('form-label');
+    priorityLabel.setAttribute('for', 'task-priority');
+    priorityLabel.textContent = `Editing priority`;
+    priorityDiv.appendChild(priorityLabel);
+
+    //task priority select
+    const prioritySelect = document.createElement('select');
+    prioritySelect.classList.add('form-select');
+    prioritySelect.setAttribute('id', 'task-priority');
+    prioritySelect.setAttribute('required', '');
+    priorityDiv.appendChild(prioritySelect);
+
+    //task priority options
+    const lowOption = document.createElement('option');
+    const mediumOption = document.createElement('option');
+    const highOption = document.createElement('option');
+    lowOption.setAttribute('value', 'low');
+    lowOption.textContent = 'Low';
+    mediumOption.setAttribute('value', 'medium');
+    mediumOption.textContent = 'Medium';
+    highOption.setAttribute('value', 'high');
+    highOption.textContent = 'High';
+    prioritySelect.appendChild(lowOption);
+    prioritySelect.appendChild(mediumOption);
+    prioritySelect.appendChild(highOption);
+
+    //task priority default value
+    prioritySelect.value = `${task.priority}`;
+
+    //save button
+    const saveButton = document.createElement('button');
+    saveButton.classList.add('btn', 'btn-primary');
+    saveButton.setAttribute('type', 'button');
+    saveButton.setAttribute('id', `${index}`);
+    saveButton.textContent = 'Save';
+    modalBody.appendChild(saveButton);
+
+    //event listener for save button
+    saveButton.addEventListener('click', (event) => {
+        event.preventDefault();
+        const title = document.getElementById('task-title').value;
+        const desc = document.getElementById('task-desc').value;
+        const dueDate = document.getElementById('task-due-date').value;
+        const priority = document.getElementById('task-priority').value;
+        console.log(`Save button: ${index}`);
+        (0,_logic_editTask__WEBPACK_IMPORTED_MODULE_0__.editTask)(title, desc, dueDate, priority, index, projectID);
+        
+        //close modal
+        _showTasks__WEBPACK_IMPORTED_MODULE_2__.editmodalInstance.hide();
+        
+        // get project from project manager
+        const project = _classes_projectManager__WEBPACK_IMPORTED_MODULE_3__.projectManager.projectList.find(project => project.id === projectID);
+        console.log("lol", project);
+        (0,_showProjects__WEBPACK_IMPORTED_MODULE_4__.displayProjectDetails)(project);
+    });
+
+
+} 
+
+function createDivmb3() {
+    const div = document.createElement('div');
+    div.classList.add('mb-3');
+    return div;
 }
 
 /***/ }),
@@ -20032,6 +20391,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   buildNav: () => (/* binding */ buildNav)
 /* harmony export */ });
 /* harmony import */ var _showProjects__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./showProjects */ "./src/components/DOMbuild.js/showProjects.js");
+/* harmony import */ var _showMain__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./showMain */ "./src/components/DOMbuild.js/showMain.js");
+
 
 
 function buildNav() {
@@ -20081,7 +20442,7 @@ function buildNav() {
 
     // Create nav items
     const navItems = [
-        { text: 'Home', clickHandler:() => console.log('Home Clicked')},
+        { text: 'Home', clickHandler: _showMain__WEBPACK_IMPORTED_MODULE_1__.showMain},
         { text: 'Projects', clickHandler: _showProjects__WEBPACK_IMPORTED_MODULE_0__.showProjects}
         
     ];
@@ -20107,6 +20468,70 @@ function buildNav() {
 
 /***/ }),
 
+/***/ "./src/components/DOMbuild.js/showMain.js":
+/*!************************************************!*\
+  !*** ./src/components/DOMbuild.js/showMain.js ***!
+  \************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   showMain: () => (/* binding */ showMain)
+/* harmony export */ });
+/* harmony import */ var _classes_projectManager__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../classes/projectManager */ "./src/components/classes/projectManager.js");
+/* harmony import */ var _logic_dateLogic__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../logic/dateLogic */ "./src/components/logic/dateLogic.js");
+/* harmony import */ var _buildContentCon__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./buildContentCon */ "./src/components/DOMbuild.js/buildContentCon.js");
+
+
+
+
+
+
+// create 3 cards to display the 3 closest tasks to today
+function showMain() {
+    const contentContainer = document.getElementById('content-container') || (0,_buildContentCon__WEBPACK_IMPORTED_MODULE_2__.createContentContainer)();
+    contentContainer.innerHTML = '';
+
+    const mainContainer = document.createElement('div');
+    contentContainer.appendChild(mainContainer);
+
+    let h1 = document.createElement('h1');
+    h1.textContent = 'Welcome to TaskMaster';
+    mainContainer.appendChild(h1);
+
+    let p = document.createElement('p');
+    p.textContent = 'Here are the 3 closest tasks to today:';
+    mainContainer.appendChild(p);
+
+    let tasks = _classes_projectManager__WEBPACK_IMPORTED_MODULE_0__.projectManager.getTasksWithClosestDueDates() 
+    tasks.forEach((task, index) => {
+        let card = document.createElement('div');
+        card.classList.add('card', 'mb-3');
+        mainContainer.appendChild(card);
+
+        let cardBody = document.createElement('div');
+        cardBody.classList.add('card-body');
+        card.appendChild(cardBody);
+
+        let cardTitle = document.createElement('h5');
+        cardTitle.classList.add('card-title');
+        cardTitle.textContent = task.title;
+        cardBody.appendChild(cardTitle);
+
+        let cardText = document.createElement('p');
+        cardText.classList.add('card-text');
+        cardText.textContent = `Due: ${task.dueDate}`;
+        cardBody.appendChild(cardText);
+    })
+
+
+}
+
+    
+
+
+/***/ }),
+
 /***/ "./src/components/DOMbuild.js/showProjects.js":
 /*!****************************************************!*\
   !*** ./src/components/DOMbuild.js/showProjects.js ***!
@@ -20115,31 +20540,30 @@ function buildNav() {
 
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   contentContainer: () => (/* binding */ contentContainer),
+/* harmony export */   displayProjectDetails: () => (/* binding */ displayProjectDetails),
 /* harmony export */   showProjects: () => (/* binding */ showProjects)
 /* harmony export */ });
-/* harmony import */ var _classes_projects__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../classes/projects */ "./src/components/classes/projects.js");
-/* harmony import */ var _addNewModal__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./addNewModal */ "./src/components/DOMbuild.js/addNewModal.js");
+/* harmony import */ var _addNewProModal__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./addNewProModal */ "./src/components/DOMbuild.js/addNewProModal.js");
+/* harmony import */ var _classes_projectManager__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../classes/projectManager */ "./src/components/classes/projectManager.js");
+/* harmony import */ var _showTasks__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./showTasks */ "./src/components/DOMbuild.js/showTasks.js");
+/* harmony import */ var _showMain__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./showMain */ "./src/components/DOMbuild.js/showMain.js");
 
 
 
-const projectList = [
-    new _classes_projects__WEBPACK_IMPORTED_MODULE_0__.Projects('Project 1', 'Description of Project 1'),
-    new _classes_projects__WEBPACK_IMPORTED_MODULE_0__.Projects('Project 2', 'Description of Project 2'),
-    new _classes_projects__WEBPACK_IMPORTED_MODULE_0__.Projects('Project 3', 'Description of Project 3'),
-    new _classes_projects__WEBPACK_IMPORTED_MODULE_0__.Projects('Project 4', 'Description of Project 4'),
-    new _classes_projects__WEBPACK_IMPORTED_MODULE_0__.Projects('Project 5', 'Description of Project 5'),
-    // Add more projects as needed
-];
+
+
+
+
+
+const projectList = _classes_projectManager__WEBPACK_IMPORTED_MODULE_1__.projectManager.getProjects()
+
 let contentContainer
 let projectsContainer
-;(0,_addNewModal__WEBPACK_IMPORTED_MODULE_1__.createProjectModal)();
 
-function createContentContainer() {
-    const container = document.createElement('div');
-    container.id = 'content-container';
-    document.body.appendChild(container);
-    return container;
-}
+//createProjectModal();
+;(0,_addNewProModal__WEBPACK_IMPORTED_MODULE_0__.createProjectModal)();
+
 
 function createProjectsContainer() {
     const container = document.createElement('div');
@@ -20149,16 +20573,16 @@ function createProjectsContainer() {
 }
 
 function showProjects() {
-    contentContainer = document.getElementById('content-container') || createContentContainer();
+    contentContainer = document.getElementById('content-container') || (0,_showMain__WEBPACK_IMPORTED_MODULE_3__.createContentContainer)();
     contentContainer.innerHTML = '';
-    projectsContainer = createProjectsContainer();
+    projectsContainer = document.getElementById('projects-container') || createProjectsContainer();
 
     // create new projects button
     const newProjectButton = document.createElement('button');
     newProjectButton.textContent = 'Add a New Project';
     newProjectButton.classList.add('btn', 'btn-primary', 'w-100', 'mb-3');
     newProjectButton.setAttribute('data-bs-toggle', 'modal');
-    newProjectButton.setAttribute('data-bs-target', '#exampleModal');
+    newProjectButton.setAttribute('data-bs-target', '#newProModal');
 
     projectsContainer.appendChild(newProjectButton);
 
@@ -20208,20 +20632,346 @@ function showProjects() {
 
 
 function displayProjectDetails(project) {
-    contentContainer.innerHTML = ''; // Clear the contentContainer for project details
+    contentContainer.innerHTML = ''; 
+    // Clear the contentContainer for project details
 
     // Create or find detailsContainer within contentContainer
     let detailsContainer = document.createElement('div');
     detailsContainer.id = 'project-details';
-    contentContainer.appendChild(detailsContainer); // Adjusted to append within contentContainer
+
+    // Adjusted to append within contentContainer
+    contentContainer.appendChild(detailsContainer); 
 
     const titleElement = document.createElement('h2');
     titleElement.textContent = project.title;
+    titleElement.id = `project-title-${project.id}`
     detailsContainer.appendChild(titleElement);
+    const taskPage = (0,_showTasks__WEBPACK_IMPORTED_MODULE_2__.showTasks)(project)
+    detailsContainer.appendChild(taskPage);
 
     // Add more project information here
 }
 
+
+/***/ }),
+
+/***/ "./src/components/DOMbuild.js/showTasks.js":
+/*!*************************************************!*\
+  !*** ./src/components/DOMbuild.js/showTasks.js ***!
+  \*************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   editmodalInstance: () => (/* binding */ editmodalInstance),
+/* harmony export */   showTasks: () => (/* binding */ showTasks)
+/* harmony export */ });
+/* harmony import */ var _classes_projectManager__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../classes/projectManager */ "./src/components/classes/projectManager.js");
+/* harmony import */ var bootstrap__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! bootstrap */ "./node_modules/bootstrap/dist/js/bootstrap.esm.js");
+/* harmony import */ var _addNewTaskModal__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./addNewTaskModal */ "./src/components/DOMbuild.js/addNewTaskModal.js");
+/* harmony import */ var _editTaskModal__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./editTaskModal */ "./src/components/DOMbuild.js/editTaskModal.js");
+/* harmony import */ var _showProjects__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./showProjects */ "./src/components/DOMbuild.js/showProjects.js");
+
+
+
+
+
+
+//tasks are stored as an array in the project object. this function will display the tasks for a given project.
+//if there are no tasks, it will display a h3 element with the text "No tasks to display"
+//the project parameter is a project object. to access the tasks
+
+//create edit task modal
+(0,_editTaskModal__WEBPACK_IMPORTED_MODULE_3__.editTaskModal)();
+
+const editTaskModalElement = document.getElementById('editTaskModal');
+const editmodalInstance = new bootstrap__WEBPACK_IMPORTED_MODULE_1__.Modal(editTaskModalElement, {
+  backdrop: 'static' // Correctly applying the 'static' option here
+});
+
+
+
+(0,_addNewTaskModal__WEBPACK_IMPORTED_MODULE_2__.addNewTaskModal)();
+function showTasks(project) {
+    if (!project || !project.tasks) {
+        console.error('Invalid project data');
+        return;
+    }
+
+    const projectID = project.id;
+    console.log('Project ID:', projectID);
+    
+    let taskContainer = document.getElementById('task-container') || document.createElement('div');
+    taskContainer.innerHTML = '';
+
+    // create add task button
+    const addTaskButton = document.createElement('button');
+    addTaskButton.textContent = 'Add a New Task';
+    addTaskButton.classList.add('btn', 'btn-primary', 'w-100', 'mb-3');
+    addTaskButton.setAttribute('data-bs-toggle', 'modal');
+    addTaskButton.setAttribute('data-bs-target', '#taskModal');
+    // need to pass the project id to the modal
+    addTaskButton.addEventListener('click', () => {
+        document.getElementById('project-id').value = projectID;
+    });
+
+    taskContainer.appendChild(addTaskButton);
+
+    // extract tasks from project object
+    let projectTasks = project.tasks;
+    console.log("Project Tasks:", projectTasks);
+
+    // if there are no tasks, display a message
+    let h3 = document.createElement('h3');
+    if (!projectTasks.length) {
+    h3.textContent = 'No tasks to display';
+    taskContainer.appendChild(h3);
+    }
+    else {
+
+        const accordion = document.createElement('div');
+        accordion.classList.add('accordion', 'accordion-flush');
+        accordion.id = 'task-accordion';
+        
+
+        projectTasks.forEach((task, index) => {
+
+            console.log(`Task "${index}": ${task.title}`);
+            //create accoridan item
+            const accordionItem = document.createElement('div');
+            accordionItem.classList.add('accordion-item');
+            accordionItem.id = `task-${index}`;
+            accordion.appendChild(accordionItem);
+
+            //create accordion header
+            const accordionHeader = document.createElement('h2');
+            accordionHeader.classList.add('accordion-header');
+            accordionHeader.id = `task-${index}-header`;
+            accordionItem.appendChild(accordionHeader);
+
+            //create accoridan button
+            const accordionButton = document.createElement('button');
+            accordionButton.classList.add('accordion-button');
+            accordionButton.setAttribute('type', 'button');
+            accordionButton.setAttribute('data-bs-toggle', 'collapse');
+            accordionButton.setAttribute('data-bs-target', `#task-${index}-collapse`);
+            accordionButton.setAttribute('aria-expanded', 'true');
+            accordionButton.setAttribute('aria-controls', `task-${index}-collapse`);
+            accordionButton.textContent = task.title;
+            // change color based on priority
+            if (task.priority === 'High' || task.priority === 'high') {
+                accordionButton.classList.add('bg-danger', 'text-white');
+            } else if (task.priority === 'Medium' || task.priority === 'medium') {
+                accordionButton.classList.add('bg-warning', 'text-dark');
+            } else {
+                accordionButton.classList.add('bg-success', 'text-white');
+            }
+            accordionHeader.appendChild(accordionButton);
+
+            //create accordion content
+            const accordionContent = document.createElement('div');
+            accordionContent.classList.add('accordion-collapse', 'collapse', 'container');
+            accordionContent.id = `task-${index}-collapse`;
+            accordionContent.setAttribute('aria-labelledby', `task-${index}-header`);
+            accordionContent.setAttribute('data-bs-parent', '#task-accordion');
+            accordionItem.appendChild(accordionContent);
+
+            //create accordion body
+            const accordionBody = document.createElement('div');
+            accordionBody.classList.add('accordion-body');
+            accordionContent.appendChild(accordionBody);
+
+            //create task desc
+            const taskDescription = document.createElement('p');
+            taskDescription.textContent = task.desc;
+            accordionBody.appendChild(taskDescription);
+
+            //create p for edit button
+            const editBP = document.createElement('p');
+            accordionBody.appendChild(editBP);
+
+            //create edit button under accordion body
+            const editButton = document.createElement('button');
+            editButton.classList.add('btn', 'btn-primary');
+            editButton.id = `edit-task-${index}`;
+            editButton.textContent = 'Edit';
+            editBP.appendChild(editButton);
+
+            //create due date
+            const dueDate = document.createElement('p');
+            dueDate.textContent = `Due Date: ${task.dueDate}`;
+            accordionBody.appendChild(dueDate);
+
+            //create priority
+            const priority = document.createElement('p');
+            priority.textContent = `Priority: ${task.priority}`;
+            accordionBody.appendChild(priority);
+
+            //create p for mark complete button and delete button
+            const markCompleteDeleteP = document.createElement('p');
+            accordionBody.appendChild(markCompleteDeleteP);
+
+            //create mark complete button if checked = false
+            if (!task.checked) {
+                const markCompleteButton = document.createElement('button');
+                markCompleteButton.classList.add('btn', 'btn-success', 'mt-3');
+                markCompleteButton.id = `mark-complete-${index}`;
+                markCompleteButton.textContent = 'Mark Complete';
+
+                //add event listener to mark complete button
+                markCompleteButton.addEventListener('click', () => {
+                    console.log(`Mark complete button clicked for task ${index}`);
+                    //toggle checked property
+                    task.checked = !task.checked;
+                    //update project in local storage
+                    const project = _classes_projectManager__WEBPACK_IMPORTED_MODULE_0__.projectManager.getProjects().find(p => p.id === projectID);
+                    _classes_projectManager__WEBPACK_IMPORTED_MODULE_0__.projectManager.saveProjects();
+                    //update the display
+                    (0,_showProjects__WEBPACK_IMPORTED_MODULE_4__.displayProjectDetails)(project);
+                });
+
+                markCompleteDeleteP.appendChild(markCompleteButton);
+            } else {
+                //show text saying task is complete
+                const taskComplete = document.createElement('p');
+                taskComplete.textContent = 'Task Complete';
+                markCompleteDeleteP.appendChild(taskComplete);
+            }
+
+            //create delete button
+            const deleteButton = document.createElement('button');
+            deleteButton.classList.add('btn', 'btn-danger', 'mt-3', 'ms-3');
+            deleteButton.id = `delete-task-${index}`;
+            deleteButton.textContent = 'Delete';
+            markCompleteDeleteP.appendChild(deleteButton);
+
+            //event listener for edit button
+            editButton.addEventListener('click', () => {
+                //call editTaskModal
+                (0,_editTaskModal__WEBPACK_IMPORTED_MODULE_3__.updateEditModal)(task, index, projectID);
+                console.log("Edit button clicked");
+                
+                editmodalInstance.show();
+            });
+
+            //event listener for delete button
+            deleteButton.addEventListener('click', () => {
+                console.log(`Delete button clicked for task ${index}`);
+                //remove task from project
+                projectTasks.splice(index, 1);
+                //update project in local storage
+                const project = _classes_projectManager__WEBPACK_IMPORTED_MODULE_0__.projectManager.getProjects().find(p => p.id === projectID);
+                _classes_projectManager__WEBPACK_IMPORTED_MODULE_0__.projectManager.saveProjects();
+                //update the display
+                (0,_showProjects__WEBPACK_IMPORTED_MODULE_4__.displayProjectDetails)(project);
+            });
+            
+
+
+        })
+    
+        taskContainer.appendChild(accordion);
+    }
+
+
+
+
+    
+
+
+    return taskContainer;
+}
+
+/***/ }),
+
+/***/ "./src/components/classes/projectManager.js":
+/*!**************************************************!*\
+  !*** ./src/components/classes/projectManager.js ***!
+  \**************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   ProjectManager: () => (/* binding */ ProjectManager),
+/* harmony export */   projectManager: () => (/* binding */ projectManager)
+/* harmony export */ });
+/* harmony import */ var _projects__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./projects */ "./src/components/classes/projects.js");
+/* harmony import */ var _tasks__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./tasks */ "./src/components/classes/tasks.js");
+/* harmony import */ var date_fns__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! date-fns */ "./node_modules/date-fns/compareAsc.mjs");
+
+
+
+class ProjectManager {
+    constructor() {
+        const savedProjects = localStorage.getItem('projects');
+        if (savedProjects) {
+            const projectsArray = JSON.parse(savedProjects);
+            this.projectList = projectsArray.map(proj => {
+                let project = new _projects__WEBPACK_IMPORTED_MODULE_0__.Projects(proj.title, proj.desc);
+                project.id = proj.id;
+                project.isCompleted = proj.isCompleted;
+                project.tasks = proj.tasks.map(task => 
+                    new _tasks__WEBPACK_IMPORTED_MODULE_1__.Task(task.title, task.desc, task.dueDate, task.priority)
+                ); // Re-instantiate each task as an instance of Task
+                return project;
+            });
+        } else {
+            this.projectList = [];
+        }
+    }
+    
+
+    addProject(project) {
+        // Ensure the new project has a unique ID
+        const maxId = this.projectList.reduce((max, item) => Math.max(max, item.id), 0);
+        project.id = maxId + 1; // Assign a new, unique ID
+        
+        this.projectList.push(project); // Add the new project to the list
+        this.saveProjects(); // Save the updated list to localStorage
+    }
+
+    // Deletes a project by ID and updates localStorage
+    deleteProject(projectId) {
+        this.projectList = this.projectList.filter(project => project.id !== projectId); // Remove the project
+        this.saveProjects(); 
+    }
+
+    getProjects() {
+        return this.projectList;
+    }
+    saveProjects() {
+        localStorage.setItem('projects', JSON.stringify(this.projectList));
+        console.log('Projects saved');
+    }
+
+    editTask(title, desc, dueDate, priority, index, projectID) {
+        const project = this.projectList.find(p => p.id === projectID);
+        if (project) {
+            project.editTask(title, desc, dueDate, priority, index);
+            this.saveProjects();
+        } else {
+            console.error('Project not found');
+        }
+    
+    }
+
+    getTasksWithClosestDueDates() {
+        // Flatten all tasks from all projects into a single array
+        const allTasks = this.projectList.flatMap(project => project.tasks);
+    
+        // Sort tasks by their due date closeness to today
+        const sortedTasks = allTasks.sort((a, b) => (0,date_fns__WEBPACK_IMPORTED_MODULE_2__.compareAsc)(new Date(a.dueDate), new Date(b.dueDate)));
+    
+        // Filter out tasks whose due date has passed
+        const upcomingTasks = sortedTasks.filter(task => (0,date_fns__WEBPACK_IMPORTED_MODULE_2__.compareAsc)(new Date(task.dueDate), new Date()) > 0);
+    
+        // Return the top 3 tasks
+        return upcomingTasks.slice(0, 3);
+      }
+
+}
+
+const projectManager = new ProjectManager(); // Create a single instance of the ProjectManager class to be used throughout the app   
 
 /***/ }),
 
@@ -20246,7 +20996,190 @@ class Projects {
     addTask(task) {
         this.tasks.push(task)
     }
+
+    editTask(title, desc, dueDate, priority, index) {
+        const taskid = index;
+        console.log(this.tasks.map(t => t.id)); 
+        const task = this.tasks[index]
+        console.log('Task fromo Projects:', task);
+        if (task) {
+            task.title = title;
+            task.desc = desc;
+            task.dueDate = dueDate;
+            task.priority = priority;
+        } else {
+            console.error('Task not found');
+        }
+    }
 };
+
+
+/***/ }),
+
+/***/ "./src/components/classes/tasks.js":
+/*!*****************************************!*\
+  !*** ./src/components/classes/tasks.js ***!
+  \*****************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   Task: () => (/* binding */ Task)
+/* harmony export */ });
+class Task {
+    constructor(title, desc, dueDate, priority) {
+    this.title = title;
+    this.desc = desc;
+    this.dueDate = dueDate;
+    this.priority = priority;
+    this.checked = false;
+    }
+}
+
+/***/ }),
+
+/***/ "./src/components/logic/createProjects.js":
+/*!************************************************!*\
+  !*** ./src/components/logic/createProjects.js ***!
+  \************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   createProjects: () => (/* binding */ createProjects)
+/* harmony export */ });
+/* harmony import */ var _DOMbuild_js_showProjects__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../DOMbuild.js/showProjects */ "./src/components/DOMbuild.js/showProjects.js");
+/* harmony import */ var _classes_projectManager__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../classes/projectManager */ "./src/components/classes/projectManager.js");
+/* harmony import */ var _classes_projects__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../classes/projects */ "./src/components/classes/projects.js");
+
+
+
+
+
+
+function createProjects(title, description) {
+    console.log('Create Projects');
+    const project = new _classes_projects__WEBPACK_IMPORTED_MODULE_2__.Projects(title, description);
+    console.log(project);
+    if (project) {
+        console.log('Project Created');
+        _classes_projectManager__WEBPACK_IMPORTED_MODULE_1__.projectManager.addProject(project);
+        (0,_DOMbuild_js_showProjects__WEBPACK_IMPORTED_MODULE_0__.showProjects)();
+        console.log(_classes_projectManager__WEBPACK_IMPORTED_MODULE_1__.projectManager);
+    } else {
+        console.log('Project not created');
+    }
+
+}
+
+/***/ }),
+
+/***/ "./src/components/logic/createTasks.js":
+/*!*********************************************!*\
+  !*** ./src/components/logic/createTasks.js ***!
+  \*********************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   createTasks: () => (/* binding */ createTasks)
+/* harmony export */ });
+/* harmony import */ var _DOMbuild_js_showTasks__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../DOMbuild.js/showTasks */ "./src/components/DOMbuild.js/showTasks.js");
+/* harmony import */ var _classes_projectManager__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../classes/projectManager */ "./src/components/classes/projectManager.js");
+/* harmony import */ var _classes_tasks__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../classes/tasks */ "./src/components/classes/tasks.js");
+
+
+
+
+
+// create new tasks and append it to the project.tasks array
+function createTasks(title, desc, dueDate, priority, projectId) {
+    const task = new _classes_tasks__WEBPACK_IMPORTED_MODULE_2__.Task(title, desc, dueDate, priority);
+    console.log('Task:', task);
+    if (task) {
+        console.log('Task Created');
+        const projectIdnum = parseInt(projectId);
+        
+        // Find the project by ID. I was passing the project ID as a string, so I had to convert it to a number
+        const project = _classes_projectManager__WEBPACK_IMPORTED_MODULE_1__.projectManager.getProjects().find(p => p.id === projectIdnum);
+        console.log('Project:', project);
+        if (project) {
+            project.addTask(task); // Add the task to the project
+            _classes_projectManager__WEBPACK_IMPORTED_MODULE_1__.projectManager.saveProjects(); // Save the updated list of projects to localStorage
+            console.log('Task created and added to project:', project);
+            (0,_DOMbuild_js_showTasks__WEBPACK_IMPORTED_MODULE_0__.showTasks)(project); // Display the updated list of tasks
+        } else {
+            console.error('Project not found');
+        }
+    } else {
+        console.error('Task not created');
+    }
+ 
+}
+
+/***/ }),
+
+/***/ "./src/components/logic/dateLogic.js":
+/*!*******************************************!*\
+  !*** ./src/components/logic/dateLogic.js ***!
+  \*******************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   thisMonth: () => (/* binding */ thisMonth),
+/* harmony export */   thisWeek: () => (/* binding */ thisWeek),
+/* harmony export */   thisYear: () => (/* binding */ thisYear),
+/* harmony export */   today: () => (/* binding */ today)
+/* harmony export */ });
+/* harmony import */ var date_fns__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! date-fns */ "./node_modules/date-fns/addDays.mjs");
+/* harmony import */ var date_fns__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! date-fns */ "./node_modules/date-fns/addMonths.mjs");
+/* harmony import */ var date_fns__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! date-fns */ "./node_modules/date-fns/addYears.mjs");
+
+
+// create a date object for today
+const today = new Date();
+
+// create a date object for the week from today
+const thisWeek = date_fns__WEBPACK_IMPORTED_MODULE_0__.addDays(today, 7);
+
+// create a date object for the month from today
+const thisMonth = date_fns__WEBPACK_IMPORTED_MODULE_1__.addMonths(today, 1);
+
+// create a date object for the year from today
+const thisYear = date_fns__WEBPACK_IMPORTED_MODULE_2__.addYears(today, 1);
+
+
+// find the 3 closest tasks to today
+
+
+/***/ }),
+
+/***/ "./src/components/logic/editTask.js":
+/*!******************************************!*\
+  !*** ./src/components/logic/editTask.js ***!
+  \******************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   editTask: () => (/* binding */ editTask)
+/* harmony export */ });
+/* harmony import */ var _DOMbuild_js_showTasks__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../DOMbuild.js/showTasks */ "./src/components/DOMbuild.js/showTasks.js");
+/* harmony import */ var _classes_projectManager__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../classes/projectManager */ "./src/components/classes/projectManager.js");
+
+
+
+function editTask (title, desc, dueDate, priority, index, projectID) {
+    
+    _classes_projectManager__WEBPACK_IMPORTED_MODULE_1__.projectManager.editTask(title, desc, dueDate, priority, index, projectID);
+    console.log('Task edited');
+    const project = _classes_projectManager__WEBPACK_IMPORTED_MODULE_1__.projectManager.projectList.find(p => p.id === projectID);
+    console.log('From EditTask.js Project:', project);
+    // Display the updated list of tasks
+    (0,_DOMbuild_js_showTasks__WEBPACK_IMPORTED_MODULE_0__.showTasks)(project);
+
+}
 
 /***/ }),
 
@@ -20438,6 +21371,386 @@ module.exports = "data:image/svg+xml,%3csvg xmlns=%27http://www.w3.org/2000/svg%
 
 module.exports = "data:image/svg+xml,%3csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 8 8%27%3e%3cpath fill=%27%23198754%27 d=%27M2.3 6.73.6 4.53c-.4-1.04.46-1.4 1.1-.8l1.1 1.4 3.4-3.8c.6-.63 1.6-.27 1.2.7l-4 4.6c-.43.5-.8.4-1.1.1z%27/%3e%3c/svg%3e";
 
+/***/ }),
+
+/***/ "./node_modules/date-fns/addDays.mjs":
+/*!*******************************************!*\
+  !*** ./node_modules/date-fns/addDays.mjs ***!
+  \*******************************************/
+/***/ ((__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   addDays: () => (/* binding */ addDays),
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var _toDate_mjs__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./toDate.mjs */ "./node_modules/date-fns/toDate.mjs");
+/* harmony import */ var _constructFrom_mjs__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./constructFrom.mjs */ "./node_modules/date-fns/constructFrom.mjs");
+
+
+
+/**
+ * @name addDays
+ * @category Day Helpers
+ * @summary Add the specified number of days to the given date.
+ *
+ * @description
+ * Add the specified number of days to the given date.
+ *
+ * @typeParam DateType - The `Date` type, the function operates on. Gets inferred from passed arguments. Allows to use extensions like [`UTCDate`](https://github.com/date-fns/utc).
+ *
+ * @param date - The date to be changed
+ * @param amount - The amount of days to be added.
+ *
+ * @returns The new date with the days added
+ *
+ * @example
+ * // Add 10 days to 1 September 2014:
+ * const result = addDays(new Date(2014, 8, 1), 10)
+ * //=> Thu Sep 11 2014 00:00:00
+ */
+function addDays(date, amount) {
+  const _date = (0,_toDate_mjs__WEBPACK_IMPORTED_MODULE_0__.toDate)(date);
+  if (isNaN(amount)) return (0,_constructFrom_mjs__WEBPACK_IMPORTED_MODULE_1__.constructFrom)(date, NaN);
+  if (!amount) {
+    // If 0 days, no-op to avoid changing times in the hour before end of DST
+    return _date;
+  }
+  _date.setDate(_date.getDate() + amount);
+  return _date;
+}
+
+// Fallback for modularized imports:
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (addDays);
+
+
+/***/ }),
+
+/***/ "./node_modules/date-fns/addMonths.mjs":
+/*!*********************************************!*\
+  !*** ./node_modules/date-fns/addMonths.mjs ***!
+  \*********************************************/
+/***/ ((__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   addMonths: () => (/* binding */ addMonths),
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var _toDate_mjs__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./toDate.mjs */ "./node_modules/date-fns/toDate.mjs");
+/* harmony import */ var _constructFrom_mjs__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./constructFrom.mjs */ "./node_modules/date-fns/constructFrom.mjs");
+
+
+
+/**
+ * @name addMonths
+ * @category Month Helpers
+ * @summary Add the specified number of months to the given date.
+ *
+ * @description
+ * Add the specified number of months to the given date.
+ *
+ * @typeParam DateType - The `Date` type, the function operates on. Gets inferred from passed arguments. Allows to use extensions like [`UTCDate`](https://github.com/date-fns/utc).
+ *
+ * @param date - The date to be changed
+ * @param amount - The amount of months to be added.
+ *
+ * @returns The new date with the months added
+ *
+ * @example
+ * // Add 5 months to 1 September 2014:
+ * const result = addMonths(new Date(2014, 8, 1), 5)
+ * //=> Sun Feb 01 2015 00:00:00
+ *
+ * // Add one month to 30 January 2023:
+ * const result = addMonths(new Date(2023, 0, 30), 1)
+ * //=> Tue Feb 28 2023 00:00:00
+ */
+function addMonths(date, amount) {
+  const _date = (0,_toDate_mjs__WEBPACK_IMPORTED_MODULE_0__.toDate)(date);
+  if (isNaN(amount)) return (0,_constructFrom_mjs__WEBPACK_IMPORTED_MODULE_1__.constructFrom)(date, NaN);
+  if (!amount) {
+    // If 0 months, no-op to avoid changing times in the hour before end of DST
+    return _date;
+  }
+  const dayOfMonth = _date.getDate();
+
+  // The JS Date object supports date math by accepting out-of-bounds values for
+  // month, day, etc. For example, new Date(2020, 0, 0) returns 31 Dec 2019 and
+  // new Date(2020, 13, 1) returns 1 Feb 2021.  This is *almost* the behavior we
+  // want except that dates will wrap around the end of a month, meaning that
+  // new Date(2020, 13, 31) will return 3 Mar 2021 not 28 Feb 2021 as desired. So
+  // we'll default to the end of the desired month by adding 1 to the desired
+  // month and using a date of 0 to back up one day to the end of the desired
+  // month.
+  const endOfDesiredMonth = (0,_constructFrom_mjs__WEBPACK_IMPORTED_MODULE_1__.constructFrom)(date, _date.getTime());
+  endOfDesiredMonth.setMonth(_date.getMonth() + amount + 1, 0);
+  const daysInMonth = endOfDesiredMonth.getDate();
+  if (dayOfMonth >= daysInMonth) {
+    // If we're already at the end of the month, then this is the correct date
+    // and we're done.
+    return endOfDesiredMonth;
+  } else {
+    // Otherwise, we now know that setting the original day-of-month value won't
+    // cause an overflow, so set the desired day-of-month. Note that we can't
+    // just set the date of `endOfDesiredMonth` because that object may have had
+    // its time changed in the unusual case where where a DST transition was on
+    // the last day of the month and its local time was in the hour skipped or
+    // repeated next to a DST transition.  So we use `date` instead which is
+    // guaranteed to still have the original time.
+    _date.setFullYear(
+      endOfDesiredMonth.getFullYear(),
+      endOfDesiredMonth.getMonth(),
+      dayOfMonth,
+    );
+    return _date;
+  }
+}
+
+// Fallback for modularized imports:
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (addMonths);
+
+
+/***/ }),
+
+/***/ "./node_modules/date-fns/addYears.mjs":
+/*!********************************************!*\
+  !*** ./node_modules/date-fns/addYears.mjs ***!
+  \********************************************/
+/***/ ((__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   addYears: () => (/* binding */ addYears),
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var _addMonths_mjs__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./addMonths.mjs */ "./node_modules/date-fns/addMonths.mjs");
+
+
+/**
+ * @name addYears
+ * @category Year Helpers
+ * @summary Add the specified number of years to the given date.
+ *
+ * @description
+ * Add the specified number of years to the given date.
+ *
+ * @typeParam DateType - The `Date` type, the function operates on. Gets inferred from passed arguments. Allows to use extensions like [`UTCDate`](https://github.com/date-fns/utc).
+ *
+ * @param date - The date to be changed
+ * @param amount - The amount of years to be added.
+ *
+ * @returns The new date with the years added
+ *
+ * @example
+ * // Add 5 years to 1 September 2014:
+ * const result = addYears(new Date(2014, 8, 1), 5)
+ * //=> Sun Sep 01 2019 00:00:00
+ */
+function addYears(date, amount) {
+  return (0,_addMonths_mjs__WEBPACK_IMPORTED_MODULE_0__.addMonths)(date, amount * 12);
+}
+
+// Fallback for modularized imports:
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (addYears);
+
+
+/***/ }),
+
+/***/ "./node_modules/date-fns/compareAsc.mjs":
+/*!**********************************************!*\
+  !*** ./node_modules/date-fns/compareAsc.mjs ***!
+  \**********************************************/
+/***/ ((__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   compareAsc: () => (/* binding */ compareAsc),
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var _toDate_mjs__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./toDate.mjs */ "./node_modules/date-fns/toDate.mjs");
+
+
+/**
+ * @name compareAsc
+ * @category Common Helpers
+ * @summary Compare the two dates and return -1, 0 or 1.
+ *
+ * @description
+ * Compare the two dates and return 1 if the first date is after the second,
+ * -1 if the first date is before the second or 0 if dates are equal.
+ *
+ * @typeParam DateType - The `Date` type, the function operates on. Gets inferred from passed arguments. Allows to use extensions like [`UTCDate`](https://github.com/date-fns/utc).
+ *
+ * @param dateLeft - The first date to compare
+ * @param dateRight - The second date to compare
+ *
+ * @returns The result of the comparison
+ *
+ * @example
+ * // Compare 11 February 1987 and 10 July 1989:
+ * const result = compareAsc(new Date(1987, 1, 11), new Date(1989, 6, 10))
+ * //=> -1
+ *
+ * @example
+ * // Sort the array of dates:
+ * const result = [
+ *   new Date(1995, 6, 2),
+ *   new Date(1987, 1, 11),
+ *   new Date(1989, 6, 10)
+ * ].sort(compareAsc)
+ * //=> [
+ * //   Wed Feb 11 1987 00:00:00,
+ * //   Mon Jul 10 1989 00:00:00,
+ * //   Sun Jul 02 1995 00:00:00
+ * // ]
+ */
+function compareAsc(dateLeft, dateRight) {
+  const _dateLeft = (0,_toDate_mjs__WEBPACK_IMPORTED_MODULE_0__.toDate)(dateLeft);
+  const _dateRight = (0,_toDate_mjs__WEBPACK_IMPORTED_MODULE_0__.toDate)(dateRight);
+
+  const diff = _dateLeft.getTime() - _dateRight.getTime();
+
+  if (diff < 0) {
+    return -1;
+  } else if (diff > 0) {
+    return 1;
+    // Return 0 if diff is 0; return NaN if diff is NaN
+  } else {
+    return diff;
+  }
+}
+
+// Fallback for modularized imports:
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (compareAsc);
+
+
+/***/ }),
+
+/***/ "./node_modules/date-fns/constructFrom.mjs":
+/*!*************************************************!*\
+  !*** ./node_modules/date-fns/constructFrom.mjs ***!
+  \*************************************************/
+/***/ ((__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   constructFrom: () => (/* binding */ constructFrom),
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/**
+ * @name constructFrom
+ * @category Generic Helpers
+ * @summary Constructs a date using the reference date and the value
+ *
+ * @description
+ * The function constructs a new date using the constructor from the reference
+ * date and the given value. It helps to build generic functions that accept
+ * date extensions.
+ *
+ * @typeParam DateType - The `Date` type, the function operates on. Gets inferred from passed arguments. Allows to use extensions like [`UTCDate`](https://github.com/date-fns/utc).
+ *
+ * @param date - The reference date to take constructor from
+ * @param value - The value to create the date
+ *
+ * @returns Date initialized using the given date and value
+ *
+ * @example
+ * import { constructFrom } from 'date-fns'
+ *
+ * // A function that clones a date preserving the original type
+ * function cloneDate<DateType extends Date(date: DateType): DateType {
+ *   return constructFrom(
+ *     date, // Use contrustor from the given date
+ *     date.getTime() // Use the date value to create a new date
+ *   )
+ * }
+ */
+function constructFrom(date, value) {
+  if (date instanceof Date) {
+    return new date.constructor(value);
+  } else {
+    return new Date(value);
+  }
+}
+
+// Fallback for modularized imports:
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (constructFrom);
+
+
+/***/ }),
+
+/***/ "./node_modules/date-fns/toDate.mjs":
+/*!******************************************!*\
+  !*** ./node_modules/date-fns/toDate.mjs ***!
+  \******************************************/
+/***/ ((__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__),
+/* harmony export */   toDate: () => (/* binding */ toDate)
+/* harmony export */ });
+/**
+ * @name toDate
+ * @category Common Helpers
+ * @summary Convert the given argument to an instance of Date.
+ *
+ * @description
+ * Convert the given argument to an instance of Date.
+ *
+ * If the argument is an instance of Date, the function returns its clone.
+ *
+ * If the argument is a number, it is treated as a timestamp.
+ *
+ * If the argument is none of the above, the function returns Invalid Date.
+ *
+ * **Note**: *all* Date arguments passed to any *date-fns* function is processed by `toDate`.
+ *
+ * @typeParam DateType - The `Date` type, the function operates on. Gets inferred from passed arguments. Allows to use extensions like [`UTCDate`](https://github.com/date-fns/utc).
+ *
+ * @param argument - The value to convert
+ *
+ * @returns The parsed date in the local time zone
+ *
+ * @example
+ * // Clone the date:
+ * const result = toDate(new Date(2014, 1, 11, 11, 30, 30))
+ * //=> Tue Feb 11 2014 11:30:30
+ *
+ * @example
+ * // Convert the timestamp to date:
+ * const result = toDate(1392098430000)
+ * //=> Tue Feb 11 2014 11:30:30
+ */
+function toDate(argument) {
+  const argStr = Object.prototype.toString.call(argument);
+
+  // Clone the date
+  if (
+    argument instanceof Date ||
+    (typeof argument === "object" && argStr === "[object Date]")
+  ) {
+    // Prevent the date to lose the milliseconds when passed to new Date() in IE10
+    return new argument.constructor(+argument);
+  } else if (
+    typeof argument === "number" ||
+    argStr === "[object Number]" ||
+    typeof argument === "string" ||
+    argStr === "[object String]"
+  ) {
+    // TODO: Can we get rid of as?
+    return new Date(argument);
+  } else {
+    // TODO: Can we get rid of as?
+    return new Date(NaN);
+  }
+}
+
+// Fallback for modularized imports:
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (toDate);
+
+
 /***/ })
 
 /******/ 	});
@@ -20550,8 +21863,10 @@ var __webpack_exports__ = {};
   \**********************/
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _components_DOMbuild_js_navbar__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./components/DOMbuild.js/navbar */ "./src/components/DOMbuild.js/navbar.js");
-/* harmony import */ var _scss_styles_scss__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./scss/styles.scss */ "./src/scss/styles.scss");
-/* harmony import */ var bootstrap__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! bootstrap */ "./node_modules/bootstrap/dist/js/bootstrap.esm.js");
+/* harmony import */ var _components_DOMbuild_js_buildContentCon__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./components/DOMbuild.js/buildContentCon */ "./src/components/DOMbuild.js/buildContentCon.js");
+/* harmony import */ var _scss_styles_scss__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./scss/styles.scss */ "./src/scss/styles.scss");
+/* harmony import */ var bootstrap__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! bootstrap */ "./node_modules/bootstrap/dist/js/bootstrap.esm.js");
+
 
 
 
@@ -20560,9 +21875,7 @@ document.addEventListener('DOMContentLoaded', async function() {
     const body = document.querySelector('body')
     const hr = document.createElement('hr')
     const nav = await (0,_components_DOMbuild_js_navbar__WEBPACK_IMPORTED_MODULE_0__.buildNav)();
-    const content = document.createElement('div');
-    content.classList.add('content');
-    content.id = 'content-container';
+    const content = await (0,_components_DOMbuild_js_buildContentCon__WEBPACK_IMPORTED_MODULE_1__.createContentContainer)();
     body.append(nav, hr, content);
     
 })
@@ -20570,4 +21883,4 @@ document.addEventListener('DOMContentLoaded', async function() {
 
 /******/ })()
 ;
-//# sourceMappingURL=bundle 63ccebb7d806bda90efe.js.map
+//# sourceMappingURL=bundle 4ab0be183f35a15a71be.js.map
