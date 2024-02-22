@@ -1,6 +1,8 @@
 import { editTask } from "../logic/editTask";
 import * as bootstrap from 'bootstrap';
-import { editmodalInstance } from "./showTasks";
+import { editmodalInstance, showTasks } from "./showTasks";
+import { projectManager } from "../classes/projectManager";
+import { displayProjectDetails } from "./showProjects";
 
 export function editTaskModal (task, index) {
     
@@ -50,7 +52,7 @@ export function editTaskModal (task, index) {
 
 }
 
-export function updateEditModal(task, index) {
+export function updateEditModal(task, index, projectID) {
 
     //append relavent data to modal before showing
 
@@ -181,11 +183,16 @@ export function updateEditModal(task, index) {
         const desc = document.getElementById('task-desc').value;
         const dueDate = document.getElementById('task-due-date').value;
         const priority = document.getElementById('task-priority').value;
-        console.log(title);
-        editTask(title, desc, dueDate, priority, index);
+        console.log(`Save button: ${index}`);
+        editTask(title, desc, dueDate, priority, index, projectID);
         
         //close modal
         editmodalInstance.hide();
+        
+        // get project from project manager
+        const project = projectManager.projectList.find(project => project.id === projectID);
+        console.log("lol", project);
+        displayProjectDetails(project);
     });
 
 

@@ -43,6 +43,17 @@ export class ProjectManager {
         console.log('Projects saved');
     }
 
+    editTask(title, desc, dueDate, priority, index, projectID) {
+        const project = this.projectList.find(p => p.id === projectID);
+        if (project) {
+            project.editTask(title, desc, dueDate, priority, index);
+            this.saveProjects();
+        } else {
+            console.error('Project not found');
+        }
+    
+    }
+
 }
 
 export const projectManager = new ProjectManager(); // Create a single instance of the ProjectManager class to be used throughout the app   

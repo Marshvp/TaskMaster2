@@ -85,14 +85,14 @@ export function showProjects() {
 }
 
 
-function displayProjectDetails(project) {
+export function displayProjectDetails(project) {
     contentContainer.innerHTML = ''; 
     // Clear the contentContainer for project details
 
     // Create or find detailsContainer within contentContainer
     let detailsContainer = document.createElement('div');
     detailsContainer.id = 'project-details';
-    
+
     // Adjusted to append within contentContainer
     contentContainer.appendChild(detailsContainer); 
 
@@ -100,7 +100,8 @@ function displayProjectDetails(project) {
     titleElement.textContent = project.title;
     titleElement.id = `project-title-${project.id}`
     detailsContainer.appendChild(titleElement);
-    detailsContainer.appendChild(showTasks(project));
+    const taskPage = showTasks(project)
+    detailsContainer.appendChild(taskPage);
 
     // Add more project information here
 }

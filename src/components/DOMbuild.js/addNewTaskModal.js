@@ -1,6 +1,7 @@
 import * as bootstrap from 'bootstrap';
 import { createTasks } from '../logic/createTasks';
-
+import { displayProjectDetails } from "./showProjects";
+import { projectManager } from "../classes/projectManager";
 
 export function addNewTaskModal() {
     const modalHTML = `
@@ -59,6 +60,9 @@ export function addNewTaskModal() {
         console.log(projectId);
         // Call createTask with the form data
         createTasks(title, description, dueDate, priority, projectId);
+        // get project from project manager
+        const project = projectManager.projectList.find(project => project.id === projectId);
+        displayProjectDetails(project);
 
         // Optionally, close the modal after creation
         const modalInstance = bootstrap.Modal.getInstance(document.getElementById('taskModal'));
@@ -66,5 +70,6 @@ export function addNewTaskModal() {
             modalInstance.hide();
         }
     });
+    
 
 }

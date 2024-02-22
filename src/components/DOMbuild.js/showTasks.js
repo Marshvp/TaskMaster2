@@ -19,7 +19,14 @@ export const editmodalInstance = new bootstrap.Modal(editTaskModalElement, {
 
 addNewTaskModal();
 export function showTasks(project) {
+    if (!project || !project.tasks) {
+        console.error('Invalid project data');
+        return;
+    }
 
+    const projectID = project.id;
+    console.log('Project ID:', projectID);
+    
     let taskContainer = document.getElementById('task-container') || document.createElement('div');
     taskContainer.innerHTML = '';
 
@@ -31,7 +38,7 @@ export function showTasks(project) {
     addTaskButton.setAttribute('data-bs-target', '#taskModal');
     // need to pass the project id to the modal
     addTaskButton.addEventListener('click', () => {
-        document.getElementById('project-id').value = project.id;
+        document.getElementById('project-id').value = projectID;
     });
 
     taskContainer.appendChild(addTaskButton);
@@ -54,6 +61,8 @@ export function showTasks(project) {
         
 
         projectTasks.forEach((task, index) => {
+
+            console.log(`Task "${index}": ${task.title}`);
             //create accoridan item
             const accordionItem = document.createElement('div');
             accordionItem.classList.add('accordion-item');
@@ -144,7 +153,7 @@ export function showTasks(project) {
             //event listener for edit button
             editButton.addEventListener('click', () => {
                 //call editTaskModal
-                updateEditModal(task, index);
+                updateEditModal(task, index, projectID);
                 console.log("Edit button clicked");
                 
                 editmodalInstance.show();

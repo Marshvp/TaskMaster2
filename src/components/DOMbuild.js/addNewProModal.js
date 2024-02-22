@@ -3,6 +3,7 @@
 import { createProjects } from '../logic/createProjects';
 import * as bootstrap from 'bootstrap';
 import { showProjects } from './showProjects';
+import { displayProjectDetails } from "./showProjects";
 
 export function createProjectModal() {
     const modalHTML = `
@@ -46,11 +47,16 @@ export function createProjectModal() {
         // Call createProjects with the form data
         createProjects(title, description);
         
+        // Clear the form
+        document.getElementById('project-title').value = '';
+        document.getElementById('project-desc').value = '';
 
+        
         // Optionally, close the modal after creation
         const modalInstance = bootstrap.Modal.getInstance(document.getElementById('newProModal'));
         if (modalInstance) {
             modalInstance.hide();
         }
     });
+
 }
