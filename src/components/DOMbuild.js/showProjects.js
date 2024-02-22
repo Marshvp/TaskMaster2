@@ -8,6 +8,8 @@ const projectList = projectManager.getProjects()
 
 let contentContainer
 let projectsContainer
+
+//createProjectModal();
 createProjectModal();
 
 function createContentContainer() {
@@ -34,7 +36,7 @@ export function showProjects() {
     newProjectButton.textContent = 'Add a New Project';
     newProjectButton.classList.add('btn', 'btn-primary', 'w-100', 'mb-3');
     newProjectButton.setAttribute('data-bs-toggle', 'modal');
-    newProjectButton.setAttribute('data-bs-target', '#exampleModal');
+    newProjectButton.setAttribute('data-bs-target', '#newProModal');
 
     projectsContainer.appendChild(newProjectButton);
 
@@ -84,12 +86,15 @@ export function showProjects() {
 
 
 function displayProjectDetails(project) {
-    contentContainer.innerHTML = ''; // Clear the contentContainer for project details
+    contentContainer.innerHTML = ''; 
+    // Clear the contentContainer for project details
 
     // Create or find detailsContainer within contentContainer
     let detailsContainer = document.createElement('div');
     detailsContainer.id = 'project-details';
-    contentContainer.appendChild(detailsContainer); // Adjusted to append within contentContainer
+    
+    // Adjusted to append within contentContainer
+    contentContainer.appendChild(detailsContainer); 
 
     const titleElement = document.createElement('h2');
     titleElement.textContent = project.title;

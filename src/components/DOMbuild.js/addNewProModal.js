@@ -6,11 +6,11 @@ import { showProjects } from './showProjects';
 
 export function createProjectModal() {
     const modalHTML = `
-    <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal fade" id="newProModal" tabindex="-1" aria-labelledby="newProeModalLabel" aria-hidden="true">
       <div class="modal-dialog">
         <div class="modal-content">
           <div class="modal-header">
-            <h5 class="modal-title" id="exampleModalLabel">New Project</h5>
+            <h5 class="modal-title" id="newProModalLabel">New Project</h5>
             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
           </div>
           <div class="modal-body">
@@ -48,7 +48,7 @@ export function createProjectModal() {
         
 
         // Optionally, close the modal after creation
-        const modalInstance = bootstrap.Modal.getInstance(document.getElementById('exampleModal'));
+        const modalInstance = bootstrap.Modal.getInstance(document.getElementById('newProModal'));
         if (modalInstance) {
             modalInstance.hide();
         }
