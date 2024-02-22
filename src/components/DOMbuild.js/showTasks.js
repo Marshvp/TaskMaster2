@@ -7,8 +7,14 @@ import { updateEditModal } from './editTaskModal';
 //if there are no tasks, it will display a h3 element with the text "No tasks to display"
 //the project parameter is a project object. to access the tasks
 
-
+//create edit task modal
 editTaskModal();
+
+const editTaskModalElement = document.getElementById('editTaskModal');
+export const editmodalInstance = new bootstrap.Modal(editTaskModalElement, {
+  backdrop: 'static' // Correctly applying the 'static' option here
+});
+
 
 
 addNewTaskModal();
@@ -140,8 +146,8 @@ export function showTasks(project) {
                 //call editTaskModal
                 updateEditModal(task, index);
                 console.log("Edit button clicked");
-                const modalInstance = new bootstrap.Modal('#editTaskModal');
-                modalInstance.show();
+                
+                editmodalInstance.show();
             });
 
 

@@ -1,3 +1,7 @@
+import { editTask } from "../logic/editTask";
+import * as bootstrap from 'bootstrap';
+import { editmodalInstance } from "./showTasks";
+
 export function editTaskModal (task, index) {
     
     //create base modal template
@@ -159,7 +163,30 @@ export function updateEditModal(task, index) {
     prioritySelect.appendChild(mediumOption);
     prioritySelect.appendChild(highOption);
 
+    //task priority default value
+    prioritySelect.value = `${task.priority}`;
 
+    //save button
+    const saveButton = document.createElement('button');
+    saveButton.classList.add('btn', 'btn-primary');
+    saveButton.setAttribute('type', 'button');
+    saveButton.setAttribute('id', `${index}`);
+    saveButton.textContent = 'Save';
+    modalBody.appendChild(saveButton);
+
+    //event listener for save button
+    saveButton.addEventListener('click', (event) => {
+        event.preventDefault();
+        const title = document.getElementById('task-title').value;
+        const desc = document.getElementById('task-desc').value;
+        const dueDate = document.getElementById('task-due-date').value;
+        const priority = document.getElementById('task-priority').value;
+        console.log(title);
+        editTask(title, desc, dueDate, priority, index);
+        
+        //close modal
+        editmodalInstance.hide();
+    });
 
 
 } 
