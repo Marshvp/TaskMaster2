@@ -173,6 +173,17 @@ export function showTasks(project) {
                 editmodalInstance.show();
             });
 
+            //event listener for delete button
+            deleteButton.addEventListener('click', () => {
+                console.log(`Delete button clicked for task ${index}`);
+                //remove task from project
+                projectTasks.splice(index, 1);
+                //update project in local storage
+                const project = projectManager.getProjects().find(p => p.id === projectID);
+                projectManager.saveProjects();
+                //update the display
+                displayProjectDetails(project);
+            });
             
 
 
