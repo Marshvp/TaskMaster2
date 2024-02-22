@@ -1,5 +1,6 @@
 import { Projects } from './projects';
 import { Task } from './tasks';
+import { compareAsc } from 'date-fns';
 export class ProjectManager {
     constructor() {
         const savedProjects = localStorage.getItem('projects');
@@ -53,6 +54,20 @@ export class ProjectManager {
         }
     
     }
+
+    getTasksWithClosestDueDates() {
+        // Flatten all tasks from all projects into a single array
+        const allTasks = this.projectList.flatMap(project => project.tasks);
+    
+        // Sort tasks by their due date closeness to today
+        const sortedTasks = allTasks.sort((a, b) => compareAsc(new Date(a.dueDate), new Date(b.dueDate)));
+    
+        // Filter out tasks whose due date has passed
+        const upcomingTasks = sortedTasks.filter(task => compareAsc(new Date(task.dueDate), new Date()) > 0);
+    
+        // Return the top 3 tasks
+        return upcomingTasks.slice(0, 3);
+      }
 
 }
 

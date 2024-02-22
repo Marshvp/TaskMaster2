@@ -85,6 +85,14 @@ export function showTasks(project) {
             accordionButton.setAttribute('aria-expanded', 'true');
             accordionButton.setAttribute('aria-controls', `task-${index}-collapse`);
             accordionButton.textContent = task.title;
+            // change color based on priority
+            if (task.priority === 'High' || task.priority === 'high') {
+                accordionButton.classList.add('bg-danger', 'text-white');
+            } else if (task.priority === 'Medium' || task.priority === 'medium') {
+                accordionButton.classList.add('bg-warning', 'text-dark');
+            } else {
+                accordionButton.classList.add('bg-success', 'text-white');
+            }
             accordionHeader.appendChild(accordionButton);
 
             //create accordion content

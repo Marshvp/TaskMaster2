@@ -2,22 +2,18 @@
 import { createProjectModal } from "./addNewProModal"
 import { projectManager} from "../classes/projectManager";
 import { showTasks } from "./showTasks";
+import { createContentContainer } from "./buildContentCon";
+
 
 
 const projectList = projectManager.getProjects()
 
-let contentContainer
+export let contentContainer
 let projectsContainer
 
 //createProjectModal();
 createProjectModal();
 
-function createContentContainer() {
-    const container = document.createElement('div');
-    container.id = 'content-container';
-    document.body.appendChild(container);
-    return container;
-}
 
 function createProjectsContainer() {
     const container = document.createElement('div');

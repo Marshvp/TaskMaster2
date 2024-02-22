@@ -1,4 +1,5 @@
 import { showProjects } from "./showProjects";
+import { showMain } from "./showMain";
 
 export function buildNav() {
     // Create nav element
@@ -16,7 +17,7 @@ export function buildNav() {
     brand.textContent = 'TaskMaster';
     brand.addEventListener('click', (e) => {
         e.preventDefault();
-        console.log('Brand Clicked');
+        showMain();
     })
     containerFluid.appendChild(brand);
 
@@ -47,7 +48,7 @@ export function buildNav() {
 
     // Create nav items
     const navItems = [
-        { text: 'Home', clickHandler:() => console.log('Home Clicked')},
+        { text: 'Home', clickHandler: showMain},
         { text: 'Projects', clickHandler: showProjects}
         
     ];
